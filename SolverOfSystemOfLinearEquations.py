@@ -106,21 +106,30 @@ def solveMatrix(matrix):
         solution.append(elem)
     return solution
 
-
-matrix = []
-matrix.append(list(map(int, input().split())))
-for i in range(1, len(matrix[0])):
-    nextStr = list(map(int, input().split()))
-    if len(nextStr) == 0:
+while True:
+    exercise = input()
+    if exercise == "end":
         break
-    matrix.append(nextStr)
+    print(exercise)
 
-for i in range(len(matrix)):
-    for j in range(len(matrix[i])):
-        matrix[i][j] = RationalNumber(matrix[i][j])
+    matrix = []
+    matrix.append(list(map(int, input().split())))
+    for i in range(1, len(matrix[0])):
+        nextStr = list(map(int, input().split()))
+        if len(nextStr) == 0:
+            break
+        matrix.append(nextStr)
 
-solution = solveMatrix(matrix)
-print(matrix)
-solution.reverse()
-for i in range(len(solution)):
-    print("x", i + 1, " = ", solution[i].p, " / ", solution[i].q, sep = "")
+    for i in range(len(matrix)):
+        for j in range(len(matrix[i])):
+            matrix[i][j] = RationalNumber(matrix[i][j])
+
+    print("Answer: ", end = "", sep = "")
+    solution = solveMatrix(matrix)
+    if solution == "No solutions" or solution == "Infinity of solutions":
+        print(solution)
+    else:
+        solution.reverse()
+        for i in range(len(solution)):
+            print("x", i + 1, " = ", solution[i].p, " / ", solution[i].q, sep = "")
+    print()
