@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 class RationalNumber:
     p, q = 1, 1  # p/q
 
@@ -52,12 +54,12 @@ class RationalNumber:
 def printMatrix(matrix):
     for mstr in matrix:
         for i in mstr:
-            print(i.p, end = "", sep = "")
+            files[1].write(str(i.p))
             if i.q != 1:
-                print("/", i.q, sep = "", end = "")
-            print(" ", end = "", sep = "")
-        print()
-    print()
+                print("/")
+            files[1].write(str(" "))
+        files[1].write(str("\n"))
+    files[1].write(str("\n"))
 
 
 def solveMatrix(matrix):
@@ -119,16 +121,24 @@ def solveMatrix(matrix):
         solution.append(elem)
     return solution
 
+
+
+# main section
+
+#file read/write
+files = [open("input.txt", "r"), open("rez.txt", "w")]
+
+#solver
 while True:
-    exercise = input()
+    exercise = files[0].readline()
     if exercise == "end":
         break
-    print(exercise)
+    files[1].write(str(exercise + "\n"))
 
     matrix = []
-    matrix.append(list(map(int, input().split())))
+    matrix.append(list(map(int, files[0].readline().split())))
     for i in range(1, len(matrix[0])):
-        nextStr = list(map(int, input().split()))
+        nextStr = list(map(int, files[0].readline().split()))
         if len(nextStr) == 0:
             break
         matrix.append(nextStr)
@@ -140,11 +150,11 @@ while True:
     printMatrix(matrix)
 
     solution = solveMatrix(matrix)
-    print("Answer: ", end="", sep="")
+    files[1].write(str("Answer: \n", ))
     if solution == "No solutions" or solution == "Infinity of solutions":
-        print(solution)
+        files[1].write(str(solution + "\n"))
     else:
         solution.reverse()
         for i in range(len(solution)):
-            print("x", i + 1, " = ", solution[i].p, " / ", solution[i].q, sep = "")
-    print()
+            files[1].write(str("x" + str(i + 1) + " = " + str(solution[i].p) + " / " + str(solution[i].q) + "\n"))
+    files[1].write(str("\n"))
