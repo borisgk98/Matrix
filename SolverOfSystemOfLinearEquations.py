@@ -49,6 +49,17 @@ class RationalNumber:
         self.p, self.q = map(int, input().split())
 
 
+def printMatrix(matrix):
+    for mstr in matrix:
+        for i in mstr:
+            print(i.p, end = "", sep = "")
+            if i.q != 1:
+                print("/", i.q, sep = "", end = "")
+            print(" ", end = "", sep = "")
+        print()
+    print()
+
+
 def solveMatrix(matrix):
     leny, lenx = len(matrix), len(matrix[0])
     used = [False]*leny
@@ -67,7 +78,7 @@ def solveMatrix(matrix):
         queue.append(y)
 
         # normalize
-        for i in range(leny - 1):
+        for i in range(leny):
             if not used[i]:
                 conNum = 1
                 for j in range(lenx):
@@ -76,8 +87,8 @@ def solveMatrix(matrix):
                     matrix[i][j] = RationalNumber(matrix[i][j].p * (conNum // matrix[i][j].q))
 
         conNum = matrix[y][x].p
-        for i in range(leny - 1):
-            if not used[i]:
+        for i in range(leny):
+            if not used[i] and matrix[i][x].p != 0:
                 conNum = RationalNumber.lcd(conNum, matrix[i][x].p)
 
         k = conNum // matrix[y][x].p
@@ -85,12 +96,14 @@ def solveMatrix(matrix):
             matrix[y][i].p *= k
 
         for i in range(leny):
-            if not used[i]:
+            if not used[i] and matrix[i][x].p != 0:
                 k = conNum // matrix[i][x].p
                 matrix[i][x].p = 0
                 for j in range(x + 1, lenx):
                     matrix[i][j].p *= k
                     matrix[i][j].p -= matrix[y][j].p
+
+        printMatrix(matrix)
 
     # second step of algorithm
     for i in range(leny):
@@ -124,8 +137,10 @@ while True:
         for j in range(len(matrix[i])):
             matrix[i][j] = RationalNumber(matrix[i][j])
 
-    print("Answer: ", end = "", sep = "")
+    printMatrix(matrix)
+
     solution = solveMatrix(matrix)
+    print("Answer: ", end="", sep="")
     if solution == "No solutions" or solution == "Infinity of solutions":
         print(solution)
     else:
