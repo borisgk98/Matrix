@@ -1,8 +1,156 @@
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+crashed with signal SIGSEGV
+SIGSEGV (TXS-Version 6631+:16db084dae24+ R )
+SIGSEGV (TXS-Version 6631+:16db084dae24+ R )
+SIGSEGV (TXS-Version 6631+:16db084dae24+ R )
+SIGSEGV (TXS-Version 6631+:16db084dae24+ R )
+
+[bt] texstudio(_ZN12SimulatedCPU13set_from_realEv+0) [0x556d246a75e0]
+[bt] texstudio(_ZN12SimulatedCPU13set_from_realEv+0) [0x556d246a75e0]
+
+"/tmp/texstudio_backtrace1.txt"
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QFSFileEngine::open: No file name specified
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QFSFileEngine::open: No file name specified
+QMutex: destroying locked mutex
+crashed with signal SIGSEGV
+crashed with signal SIGSEGV
+crashed with signal SIGSEGV
+crashed with signal SIGSEGV
+crashed with signal SIGSEGV
+Forced kill after recovering failed after: SIGSEGV
+
 Error parsing gtk-icon-sizes string: ''
-Error parsing gtk-icon-sizes string: ''
-Error parsing gtk-icon-sizes string: ''
-Already running
-Error parsing gtk-icon-sizes string: ''
-Error parsing gtk-icon-sizes string: ''
-Error parsing gtk-icon-sizes string: ''
-Error parsing gtk-icon-sizes string: ''
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+QMutex: destroying locked mutex
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+QMutex: destroying locked mutex
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+QMutex: destroying locked mutex
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+QMutex: destroying locked mutex
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+QMutex: destroying locked mutex
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+QMutex: destroying locked mutex
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+QMutex: destroying locked mutex
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+QMutex: destroying locked mutex
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+QMutex: destroying locked mutex
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+QMutex: destroying locked mutex
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+QMutex: destroying locked mutex
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+QMutex: destroying locked mutex
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+QMutex: destroying locked mutex
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+QMutex: destroying locked mutex
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+QMutex: destroying locked mutex
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+QMutex: destroying locked mutex
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+QMutex: destroying locked mutex
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+QMutex: destroying locked mutex
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+QMutex: destroying locked mutex
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+/home/D/my programms/python/SolverOfSystemOfLinearEquations/rez.tex modified.
+QMutex: destroying locked mutex

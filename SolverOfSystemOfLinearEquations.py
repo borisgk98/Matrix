@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import os
 
 class RationalNumber:
     p, q = 1, 1  # p/q
@@ -52,14 +53,20 @@ class RationalNumber:
 
 
 def printMatrix(matrix):
-    for mstr in matrix:
-        for i in mstr:
-            files[1].write(str(i.p))
-            if i.q != 1:
-                print("/")
-            files[1].write(str(" "))
-        files[1].write(str("\n"))
-    files[1].write(str("\n"))
+    files[1].write("\\begin{bmatrix}\n")
+    for e in range(len(matrix)):
+        mstr = matrix[e]
+        for el in range(len(mstr)):
+            i = mstr[el]
+            if i.q == 1 or i.p == 0:
+                files[1].write(str(i.p))
+            else:
+                files[1].write("\\frac{" + str(i.p) + "}{" + str(i.q) + "}")
+            if el != len(mstr) - 1:
+                files[1].write(" & ")
+        if e != len(matrix) - 1:
+            files[1].write(str("\\\\ \n"))
+    files[1].write(str("\\end{bmatrix}"))
 
 
 def solveMatrix(matrix):
@@ -68,7 +75,8 @@ def solveMatrix(matrix):
     queue = []
 
     # first step of algorithm
-    for x in range(lenx - 1):  #
+    ifPrinted = False
+    for x in range(lenx - 1):
         y = -1
         for i in range(leny):
             if matrix[i][x].p != 0 and not used[i]:
@@ -105,7 +113,10 @@ def solveMatrix(matrix):
                     matrix[i][j].p *= k
                     matrix[i][j].p -= matrix[y][j].p
 
+        if ifPrinted:
+            files[1].write("\\Rightarrow\n")
         printMatrix(matrix)
+        ifPrinted = True
 
     # second step of algorithm
     for i in range(leny):
@@ -117,7 +128,7 @@ def solveMatrix(matrix):
         sum = matrix[y][-1]
         for i in range(len(queue) - c, lenx - 1):
             sum = sum - matrix[y][i] * solution[-(i - len(queue) + c + 1)]
-        elem = sum / matrix[y][x]    # q
+        elem = sum / matrix[y][x]
         solution.append(elem)
     return solution
 
@@ -125,15 +136,29 @@ def solveMatrix(matrix):
 
 # main section
 
-#file read/write
-files = [open("input.txt", "r"), open("rez.txt", "w")]
+# file read/write
+files = [open("input.txt", "r"), open("rez.tex", "w")]
 
-#solver
+# generate TeX
+texStr = "\\documentclass[14pt]{article}\n" \
+         "\\usepackage{amsmath}\n" \
+         "%opening\n" \
+         "\\title{Solutions of systems of linear equations}\n" \
+         "\\author{Boris Kozhukhovskiy, ITIS, group 704}\n" \
+         "\\begin{document}\n" \
+         "\\maketitle\n" \
+         "\\begin{enumerate}\n"
+files[1].write(texStr)
+
+# solver
 while True:
     exercise = files[0].readline()
     if exercise == "end":
         break
-    files[1].write(str(exercise + "\n"))
+
+    # generate
+    texStr = "\\item\n" + exercise + "\n"
+    files[1].write(texStr)
 
     matrix = []
     matrix.append(list(map(int, files[0].readline().split())))
@@ -147,14 +172,35 @@ while True:
         for j in range(len(matrix[i])):
             matrix[i][j] = RationalNumber(matrix[i][j])
 
+    files[1].write("\n$\n")
     printMatrix(matrix)
-
+    files[1].write("\\Rightarrow\n")
     solution = solveMatrix(matrix)
-    files[1].write(str("Answer: \n", ))
+    files[1].write("$\n")
+
+    files[1].write(str("\n\nAnswers: ", ))
     if solution == "No solutions" or solution == "Infinity of solutions":
         files[1].write(str(solution + "\n"))
     else:
         solution.reverse()
         for i in range(len(solution)):
-            files[1].write(str("x" + str(i + 1) + " = " + str(solution[i].p) + " / " + str(solution[i].q) + "\n"))
+            files[1].write("$")
+            if solution[i].q == 1 or solution[i].p == 0:
+                files[1].write(str("x" + str(i + 1) + " = " + str(solution[i].p)))
+            else:
+                files[1].write(str("x" + str(i + 1) + " = \\frac{" + str(solution[i].p)
+                                   + "}{" + str(solution[i].q) + "}"))
+            if i != len(solution) - 1:
+                files[1].write(", \\quad")
+            files[1].write("$\n")
+
     files[1].write(str("\n"))
+
+# finish TeX generate
+texStr = "\\end{enumerate}\n" \
+         "\\end{document}"
+files[1].write(texStr)
+files[1].close()
+
+# TeX compile
+#os.system("pdflatex rez.tex")
