@@ -68,6 +68,31 @@ def printMatrix(matrix):
             files[1].write(str("\\\\ \n"))
     files[1].write(str("\\end{bmatrix}"))
 
+def printMatrixAsSystem(matrix):
+    files[1].write("\\begin{cases}\n")
+    for e in range(len(matrix)):
+        mstr = matrix[e]
+        for el in range(len(mstr) - 1):
+            if el != 0:
+                if i.p >= 0:
+                    files[1].write(" + ")
+                else:
+                    files[1].write(" - ")
+            i = mstr[el]
+            if abs(i.p) != 1:
+                if i.q == 1 or i.p == 0:
+                    files[1].write(str(abs(i.p)))
+                else:
+                    files[1].write("\\frac{" + str(abs(i.p)) + "}{" + str(i.q) + "}")
+            files[1].write("x_" + str(el + 1))
+        files[1].write(" = ")
+        if i.q == 1 or i.p == 0:
+            files[1].write(str(mstr[-1].p))
+        else:
+            files[1].write("\\frac{" + str(mstr[-1].p) + "}{" + str(mstr[-1].q) + "}")
+        if e != len(matrix) - 1:
+            files[1].write(str("\\\\ \n"))
+    files[1].write(str("\\end{cases}"))
 
 def solveMatrix(matrix):
     leny, lenx = len(matrix), len(matrix[0])
@@ -172,7 +197,12 @@ while True:
         for j in range(len(matrix[i])):
             matrix[i][j] = RationalNumber(matrix[i][j])
 
-    files[1].write("\n$\n")
+    # print Data
+    files[1].write("Data:\\\\\n$\n")
+    printMatrixAsSystem(matrix)
+    files[1].write("$\\\\\n")
+
+    files[1].write("Solution:\\\\\n$\n")
     printMatrix(matrix)
     files[1].write("\\Rightarrow\n")
     solution = solveMatrix(matrix)
