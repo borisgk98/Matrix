@@ -139,7 +139,7 @@ def solveMatrix(matrix):
                     matrix[i][j].p -= matrix[y][j].p
 
         if ifPrinted:
-            files[1].write("\\Rightarrow\n")
+            files[1].write("\\Rightarrow\\\\\\\\\\\\\n")
         printMatrix(matrix)
         ifPrinted = True
 
@@ -166,6 +166,12 @@ files = [open("input.txt", "r"), open("rez.tex", "w")]
 
 # generate TeX
 texStr = "\\documentclass[14pt]{article}\n" \
+         "\\textwidth=175mm\n" \
+         "\\textheight=260mm\n" \
+        "\\oddsidemargin=-.4mm\n" \
+        "\\headsep=5mm\n" \
+        "\\topmargin=-1in\n" \
+        "\\unitlength=1mm\n" \
          "\\usepackage{amsmath}\n" \
          "%opening\n" \
          "\\title{Solutions of systems of linear equations}\n" \
@@ -182,7 +188,7 @@ while True:
         break
 
     # generate
-    texStr = "\\item\n" + exercise + "\n"
+    texStr = "\\item\n\\textbf{" + exercise + "}" + "\n"
     files[1].write(texStr)
 
     matrix = []
@@ -198,17 +204,17 @@ while True:
             matrix[i][j] = RationalNumber(matrix[i][j])
 
     # print Data
-    files[1].write("Data:\\\\\n$\n")
+    files[1].write("\\\\Data:\\\\\\\\\\\n$\n")
     printMatrixAsSystem(matrix)
     files[1].write("$\\\\\n")
 
-    files[1].write("Solution:\\\\\n$\n")
+    files[1].write("\\\\Solution:\\\\\\\\\n$\n")
     printMatrix(matrix)
-    files[1].write("\\Rightarrow\n")
+    files[1].write("\\Rightarrow\\\\\\\\\\\\\n")
     solution = solveMatrix(matrix)
     files[1].write("$\n")
 
-    files[1].write(str("\n\nAnswers: ", ))
+    files[1].write(str("\\\\\\\\\\\\\nAnswers: ", ))
     if solution == "No solutions" or solution == "Infinity of solutions":
         files[1].write(str(solution + "\n"))
     else:
@@ -233,4 +239,4 @@ files[1].write(texStr)
 files[1].close()
 
 # TeX compile
-#os.system("pdflatex rez.tex")
+os.system("pdflatex rez.tex")
