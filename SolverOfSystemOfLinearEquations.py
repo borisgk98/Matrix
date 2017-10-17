@@ -243,7 +243,8 @@ class Matrix:
 
         # приводим в треугольный вид
         # массив множателей, которые выносятся перед определителем
-        multipliers = []
+        multipliersQ = []
+        multipliersP = []
         strTexRez = ""
         ifPrinted = False
         for x in range(lenx - 1):
@@ -277,7 +278,7 @@ class Matrix:
             for i in range(lenx):
                 self.matrix[y][i].p *= k
             if k != 1:
-                multipliers.append(k)
+                multipliersQ.append(k)
 
             # TODO сделать красивый вывод строк (в нужном порядке в соответсвии с диагональю)
             # TODO пофиксить неправильную работу с отрицательными числами
@@ -286,24 +287,47 @@ class Matrix:
                     k = conNum // self.matrix[i][x].p
                     self.matrix[i][x].p = 0
                     if k != 1:
-                        multipliers.append(k)
+                        multipliersQ.append(k)
                     for j in range(x + 1, lenx):
                         self.matrix[i][j].p *= k
                         self.matrix[i][j].p -= self.matrix[y][j].p
 
+            for i in range(leny):
+                conNum = 0
+                for j in range(lenx):
+                    if self.matrix[i][j].p != 0:
+                        if conNum == 0:
+                            conNum = self.matrix[i][j].p
+                        else:
+                            conNum = RationalNumber.gcd(conNum, self.matrix[i][j].p)
+                if conNum < 2:
+                    continue
+                multipliersP.append(conNum)
+                for j in range(lenx):
+                    self.matrix[i][j].p //= conNum
+
             if ifPrinted:
                 strTexRez += ("=\\\\\\\\\\\\\n")
-            strTexRez += "\\frac{1}{"
-            for i in range(len(multipliers)):
-                strTexRez += "(" + str(multipliers[i]) + ")" + ("*" if i != len(multipliers) - 1 else "")
-            strTexRez += "}"
+            if len(multipliersQ) != 0:
+                strTexRez += "\\frac{"
+                for i in range(len(multipliersP)):
+                    strTexRez += "(" + str(multipliersP[i]) + ")" + ("*" if i != len(multipliersP) - 1 else "")
+                strTexRez += "}{"
+                for i in range(len(multipliersQ)):
+                    strTexRez += "(" + str(multipliersQ[i]) + ")" + ("*" if i != len(multipliersQ) - 1 else "")
+                strTexRez += "}"
+            else:
+                for i in range(len(multipliersP)):
+                    strTexRez += "(" + str(multipliersP[i]) + ")" + ("*" if i != len(multipliersP) - 1 else "")
             strTexRez += self.matrixToDetTex()
             ifPrinted = True
         determ = RationalNumber(1, 1)
         for i in range(lenx):
             determ *= self.matrix[i][i]
-        for el in multipliers:
+        for el in multipliersQ:
             determ /= RationalNumber(el)
+        for el in multipliersP:
+            determ *= RationalNumber(el)
         strTexRez += ("=\\\\\\\\\\\\\n") + determ.toStrTeX()
         return strTexRez
 
