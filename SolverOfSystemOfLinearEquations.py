@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import os
+import os, copy
 
 class RationalNumber:
     p, q = 1, 1  # p/q
@@ -64,61 +64,87 @@ class RationalNumber:
 class Matrix:
     matrix = [[]]
 
-    # изменяем матрицу как по методу Гаусса. Для квадратный получаем диагональную матрицу
-    def toTriangularView(self, BySteps=False):
+    def normalize(self):
+        leny, lenx = len(self.matrix), len(self.matrix[0])
+        # (q/p => a/1)
+        for i in range(leny):
+                conNum = 1
+                for j in range(lenx):
+                    conNum = RationalNumber.lcd(self.matrix[i][j].q, conNum)
+                for j in range(lenx):
+                    self.matrix[i][j] = RationalNumber(self.matrix[i][j].p * (conNum // self.matrix[i][j].q))
+        for i in range(leny):
+                conNum = 0
+                for j in range(lenx):
+                    if self.matrix[i][j].p != 0:
+                        conNum = (self.matrix[i][j].p if conNum == 0 else RationalNumber.gcd(self.matrix[i][j].p, conNum))
+                for j in range(lenx):
+                    if conNum != 0:
+                        self.matrix[i][j].p //= conNum
+
+    # конструктор по матрице из RationalNumber
+    def __init__(self, matrix):
+        self.matrix = matrix
+
+    # В TeX строку как матрицу
+    def matrixToTex(self):
+        copyMatrix = copy.deepcopy(self)
+        copyMatrix.normalize()
+        rezStr = ""
+        rezStr += "\\begin{bmatrix}\n"
+        for e in range(len(copyMatrix.matrix)):
+            mstr = copyMatrix.matrix[e]
+            for el in range(len(mstr)):
+                i = mstr[el]
+                if i.q == 1 or i.p == 0:
+                    rezStr += (str(i.p))
+                else:
+                    rezStr += ("\\frac{" + str(i.p) + "}{" + str(i.q) + "}")
+                if el != len(mstr) - 1:
+                    rezStr += (" & ")
+            if e != len(copyMatrix.matrix) - 1:
+                rezStr += (str("\\\\ \n"))
+
+        rezStr += (str("\\end{bmatrix}"))
+        return rezStr
+
+    # В TeX строку как систему
+    def matrixToTexSystem(self):
+        copyMatrix = self
+        rezStr = ""
+        rezStr += ("\\begin{cases}\n")
+        for e in range(len(copyMatrix.matrix)):
+            mstr = copyMatrix.matrix[e]
+            for el in range(len(mstr) - 1):
+                if el != 0:
+                    if i.p >= 0:
+                        rezStr += (" + ")
+                    else:
+                        rezStr += (" - ")
+                i = mstr[el]
+                if abs(i.p) != 1:
+                    if i.q == 1 or i.p == 0:
+                        rezStr += (str(abs(i.p)))
+                    else:
+                        rezStr += ("\\frac{" + str(abs(i.p)) + "}{" + str(i.q) + "}")
+                rezStr += ("x_" + str(el + 1))
+            rezStr += (" = ")
+            if i.q == 1 or i.p == 0:
+                rezStr += (str(mstr[-1].p))
+            else:
+                rezStr += ("\\frac{" + str(mstr[-1].p) + "}{" + str(mstr[-1].q) + "}")
+            if e != len(copyMatrix.matrix) - 1:
+                rezStr += (str("\\\\ \n"))
+        rezStr += (str("\\end{cases}"))
+        return rezStr
+
+    # Решить матрцу как систему по методу Гаусса
+    def solveMatrixAsSystem(self, method="Gauss", BySteps=True):
         leny, lenx = len(self.matrix), len(self.matrix[0])
         used = [False]*leny
         queue = []
 
-        # ifPrinted = False
-        for x in range(lenx - 1):
-            y = -1
-            for i in range(leny):
-                if self.matrix[i][x].p != 0 and not used[i]:
-                    y = i
-                    break
-            if y == -1:
-                continue
-            used[y] = True
-            queue.append(y)
-
-            # normalize
-            for i in range(leny):
-                if not used[i]:
-                    conNum = 1
-                    for j in range(lenx):
-                        conNum = RationalNumber.lcd(self.matrix[i][j].q, conNum)
-                    for j in range(lenx):
-                        self.matrix[i][j] = RationalNumber(self.matrix[i][j].p * (conNum // self.matrix[i][j].q))
-
-            conNum = self.matrix[y][x].p
-            for i in range(leny):
-                if not used[i] and self.matrix[i][x].p != 0:
-                    conNum = RationalNumber.lcd(conNum, self.matrix[i][x].p)
-
-            k = conNum // self.matrix[y][x].p
-            for i in range(lenx):
-                self.matrix[y][i].p *= k
-
-            for i in range(leny):
-                if not used[i] and self.matrix[i][x].p != 0:
-                    k = conNum // self.matrix[i][x].p
-                    self.matrix[i][x].p = 0
-                    for j in range(x + 1, lenx):
-                        self.matrix[i][j].p *= k
-                        self.matrix[i][j].p -= self.matrix[y][j].p
-
-            # if ifPrinted:
-            #     files[1].write("\\Rightarrow\\\\\\\\\\\\\n")
-            # printMatrix(matrix)
-            # ifPrinted = True
-
-    # Так же как toTriangulsrView, только возвращает TeX строку решения по шагам
-    def toTriangularView(self, BySteps=True):
-        leny, lenx = len(self.matrix), len(self.matrix[0])
-        used = [False]*leny
-        queue = []
-
+        # приводим в треугольный вид
         strTexRez = ""
         ifPrinted = False
         for x in range(lenx - 1):
@@ -132,7 +158,7 @@ class Matrix:
             used[y] = True
             queue.append(y)
 
-            # normalize
+            # (p/q => a/1)
             for i in range(leny):
                 if not used[i]:
                     conNum = 1
@@ -160,71 +186,8 @@ class Matrix:
 
             if ifPrinted:
                 strTexRez += ("\\Rightarrow\\\\\\\\\\\\\n")
-            strTexRez += self.matrixToTex();
+            strTexRez += self.matrixToTex()
             ifPrinted = True
-        return strTexRez
-
-    # конструктор по матрице из RationalNumber
-    def __init__(self, matrix):
-        self.matrix = matrix
-
-    # В TeX строку как матрицу
-    def matrixToTex(self):
-        rezStr = ""
-        rezStr += "\\begin{bmatrix}\n"
-        for e in range(len(self.matrix)):
-            mstr = self.matrix[e]
-            for el in range(len(mstr)):
-                i = mstr[el]
-                if i.q == 1 or i.p == 0:
-                    rezStr += (str(i.p))
-                else:
-                    rezStr += ("\\frac{" + str(i.p) + "}{" + str(i.q) + "}")
-                if el != len(mstr) - 1:
-                    rezStr += (" & ")
-            if e != len(self.matrix) - 1:
-                rezStr += (str("\\\\ \n"))
-
-        rezStr += (str("\\end{bmatrix}"))
-        return rezStr
-
-    # В TeX строку как систему
-    def matrixToTexSystem(self):
-        rezStr = ""
-        rezStr += ("\\begin{cases}\n")
-        for e in range(len(self.matrix)):
-            mstr = self.matrix[e]
-            for el in range(len(mstr) - 1):
-                if el != 0:
-                    if i.p >= 0:
-                        rezStr += (" + ")
-                    else:
-                        rezStr += (" - ")
-                i = mstr[el]
-                if abs(i.p) != 1:
-                    if i.q == 1 or i.p == 0:
-                        rezStr += (str(abs(i.p)))
-                    else:
-                        rezStr += ("\\frac{" + str(abs(i.p)) + "}{" + str(i.q) + "}")
-                rezStr += ("x_" + str(el + 1))
-            rezStr += (" = ")
-            if i.q == 1 or i.p == 0:
-                rezStr += (str(mstr[-1].p))
-            else:
-                rezStr += ("\\frac{" + str(mstr[-1].p) + "}{" + str(mstr[-1].q) + "}")
-            if e != len(self.matrix) - 1:
-                rezStr += (str("\\\\ \n"))
-        rezStr += (str("\\end{cases}"))
-        return rezStr
-
-    # Решить матрцу как систему по методу Гаусса
-    def solveMatrixAsSystem(self, method="Gauss", BySteps=True):
-        leny, lenx = len(self.matrix), len(self.matrix[0])
-        used = [False]*leny
-        queue = []
-
-        # приводим в треугольный вид
-        stepsStr = self.toTriangularView(BySteps)
 
         # second step of algorithm
         for i in range(leny):
@@ -240,7 +203,7 @@ class Matrix:
                 sum = sum - self.matrix[y][i] * solution[-(i - len(queue) + c + 1)]
             elem = sum / self.matrix[y][x]
             solution.append(elem)
-        return solution, stepsStr
+        return solution, strTexRez
 
 class InputError(Exception):
     pass
@@ -280,12 +243,12 @@ while True:
 
     matrix = []
     matrix.append(list(map(RationalNumber.stringToRationalNuber, files[0].readline().split())))
-    for i in range(1, len(matrix[0])):
+    while True:
         nextMatixStr = list(map(RationalNumber.stringToRationalNuber, files[0].readline().split()))
-        if (len(nextMatixStr) != len(matrix[0])):
-            raise InputError("Bad matrix string")
         if len(nextMatixStr) == 0:
             break
+        if (len(nextMatixStr) != len(matrix[0])):
+            raise InputError("Bad matrix string")
         matrix.append(nextMatixStr)
 
     matrix = Matrix(matrix)
@@ -315,13 +278,16 @@ while True:
     files[1].write(matrix.matrixToTex())
     files[1].write("\\Rightarrow\\\\\\\\\\\\\n")
     solution = matrix.solveMatrixAsSystem("Gauss", True)
-    files[1].write("$\n")
 
-    files[1].write(str("\\\\\\\\\\\\\nAnswers: ", ))
     if type(solution) == str:
+        files[1].write("$\n")
+        files[1].write(str("\\\\\\\\\\\\\nAnswers: ", ))
         files[1].write(str(solution + "\n"))
     else:
         solution, stepsStr = solution[0], solution[1]
+        files[1].write(stepsStr)
+        files[1].write("$\n")
+        files[1].write(str("\\\\\\\\\\\\\nAnswers: ", ))
         solution.reverse()
         for i in range(len(solution)):
             files[1].write("$")
