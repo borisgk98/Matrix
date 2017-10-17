@@ -27,6 +27,14 @@ class RationalNumber:
     def lcd(a, b):
         return a // RationalNumber.gcd(a, b) * b
 
+    def toStrTeX(self):
+        rezStr = ""
+        if self.q == 1 or self.p == 0:
+            rezStr += (str(self.p))
+        else:
+            rezStr += ("\\frac{" + str(self.p) + "}{" + str(self.q) + "}")
+        return rezStr
+
     def __init__(self, a, b=1):
         self.p, self.q = a, b
 
@@ -86,7 +94,7 @@ class Matrix:
     def __init__(self, matrix):
         self.matrix = matrix
 
-    # В TeX строку как матрицу
+    # В TeX строку как матрицу с normalize
     def matrixToTex(self):
         copyMatrix = copy.deepcopy(self)
         copyMatrix.normalize()
@@ -106,6 +114,27 @@ class Matrix:
                 rezStr += (str("\\\\ \n"))
 
         rezStr += (str("\\end{bmatrix}"))
+        return rezStr
+
+    # в определитель TeX
+    def matrixToDetTex(self):
+        copyMatrix = self
+        rezStr = ""
+        rezStr += "\\begin{vmatrix}\n"
+        for e in range(len(copyMatrix.matrix)):
+            mstr = copyMatrix.matrix[e]
+            for el in range(len(mstr)):
+                i = mstr[el]
+                if i.q == 1 or i.p == 0:
+                    rezStr += (str(i.p))
+                else:
+                    rezStr += ("\\frac{" + str(i.p) + "}{" + str(i.q) + "}")
+                if el != len(mstr) - 1:
+                    rezStr += (" & ")
+            if e != len(copyMatrix.matrix) - 1:
+                rezStr += (str("\\\\ \n"))
+
+        rezStr += (str("\\end{vmatrix}"))
         return rezStr
 
     # В TeX строку как систему
@@ -205,7 +234,85 @@ class Matrix:
             solution.append(elem)
         return solution, strTexRez
 
-class InputError(Exception):
+    def det(self, ByStep=True):
+        leny, lenx = len(self.matrix), len(self.matrix[0])
+        if leny != lenx:
+            raise MatrixException("No square matrix")
+        used = [False]*leny
+        queue = []
+
+        # приводим в треугольный вид
+        # массив множателей, которые выносятся перед определителем
+        multipliers = []
+        strTexRez = ""
+        ifPrinted = False
+        for x in range(lenx - 1):
+            y = -1
+            for i in range(leny):
+                if self.matrix[i][x].p != 0 and not used[i]:
+                    y = i
+                    break
+            if y == -1:
+                continue
+            used[y] = True
+            queue.append(y)
+
+            # (p/q => a/1)
+            for i in range(leny):
+                if not used[i]:
+                    conNum = 1
+                    for j in range(lenx):
+                        conNum = RationalNumber.lcd(self.matrix[i][j].q, conNum)
+                    # if conNum != 1:
+                    #     multipliers.append(conNum)
+                    for j in range(lenx):
+                        self.matrix[i][j] = RationalNumber(self.matrix[i][j].p * (conNum // self.matrix[i][j].q))
+
+            conNum = self.matrix[y][x].p
+            for i in range(leny):
+                if not used[i] and self.matrix[i][x].p != 0:
+                    conNum = RationalNumber.lcd(conNum, self.matrix[i][x].p)
+
+            k = conNum // self.matrix[y][x].p
+            for i in range(lenx):
+                self.matrix[y][i].p *= k
+            if k != 1:
+                multipliers.append(k)
+
+            # TODO сделать красивый вывод строк (в нужном порядке в соответсвии с диагональю)
+            # TODO пофиксить неправильную работу с отрицательными числами
+            for i in range(leny):
+                if not used[i] and self.matrix[i][x].p != 0:
+                    k = conNum // self.matrix[i][x].p
+                    self.matrix[i][x].p = 0
+                    if k != 1:
+                        multipliers.append(k)
+                    for j in range(x + 1, lenx):
+                        self.matrix[i][j].p *= k
+                        self.matrix[i][j].p -= self.matrix[y][j].p
+
+            if ifPrinted:
+                strTexRez += ("=\\\\\\\\\\\\\n")
+            strTexRez += "\\frac{1}{"
+            for i in range(len(multipliers)):
+                strTexRez += "(" + str(multipliers[i]) + ")" + ("*" if i != len(multipliers) - 1 else "")
+            strTexRez += "}"
+            strTexRez += self.matrixToDetTex()
+            ifPrinted = True
+        determ = RationalNumber(1, 1)
+        for i in range(lenx):
+            determ *= self.matrix[i][i]
+        for el in multipliers:
+            determ /= RationalNumber(el)
+        strTexRez += ("=\\\\\\\\\\\\\n") + determ.toStrTeX()
+        return strTexRez
+
+
+
+class BadInputException(Exception):
+    pass
+
+class MatrixException(Exception):
     pass
 
 # main section
@@ -234,7 +341,7 @@ files[1].write(texStr)
 # solver
 while True:
     exercise = files[0].readline()
-    if exercise == "end":
+    if exercise == "end\n":
         break
 
     # generate
@@ -248,11 +355,11 @@ while True:
         if len(nextMatixStr) == 0:
             break
         if (len(nextMatixStr) != len(matrix[0])):
-            raise InputError("Bad matrix string")
+            raise BadInputException("Bad matrix string")
         matrix.append(nextMatixStr)
 
     matrix = Matrix(matrix)
-
+    matrixCopy = copy.deepcopy(matrix)
     # print Data
     files[1].write("\\\\Data:\\\\\\\\\\\n$\n")
     files[1].write(matrix.matrixToTexSystem())
@@ -300,7 +407,13 @@ while True:
                 files[1].write(", \\quad")
             files[1].write("$\n")
 
-    files[1].write(str("\n"))
+    matrix = matrixCopy
+    files[1].write(str("\n\nDeterminator:\n\n$"))
+    files[1].write(matrix.matrixToDetTex())
+    files[1].write("=\\\\\\\\\\\\\n")
+    files[1].write(matrix.det(True))
+    files[1   ].write("$\n")
+    files[1].write("\n\n")
 
 # finish TeX generate
 texStr = "\\end{enumerate}\n" \
