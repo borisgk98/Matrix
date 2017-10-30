@@ -157,18 +157,54 @@ class Matrix:
                     else:
                         rezStr += ("\\frac{" + str(abs(i.p)) + "}{" + str(i.q) + "}")
                 rezStr += ("x_" + str(el + 1))
-            rezStr += (" = ")
-            if i.q == 1 or i.p == 0:
-                rezStr += (str(mstr[-1].p))
-            else:
-                rezStr += ("\\frac{" + str(mstr[-1].p) + "}{" + str(mstr[-1].q) + "}")
+                rezStr += (" = ")
+                if i.q == 1 or i.p == 0:
+                    rezStr += (str(mstr[-1].p))
+                else:
+                    rezStr += ("\\frac{" + str(mstr[-1].p) + "}{" + str(mstr[-1].q) + "}")
             if e != len(copyMatrix.matrix) - 1:
                 rezStr += (str("\\\\ \n"))
         rezStr += (str("\\end{cases}"))
         return rezStr
 
+    # Решить матрцу как систему по методу Крамера
+    def solveMatrixAsSystemKramer(self):
+        solution = []
+        strTexRez = ""
+        strTexRez += str("\n$\Delta:\n")
+        A = Matrix([])
+        for el in self.matrix:
+            A.matrix.append(el[:-1])
+        copyA = Matrix(copy.deepcopy(A.matrix))
+        strTexRez += matrix.matrixToDetTex()
+        strTexRez += ("=\\\\\\\\\\\\\n")
+        det = A.det(True)
+        strTexRez += (det[0])
+        det = det[1]
+        strTexRez += ("$\n")
+        strTexRez += ("\n\n")
+        A = copyA
+        if det.p == 0:
+            return "No solution"
+        for i in range(len(A.matrix[0])):
+            strTexRez += str("\n\n$\Delta_{" + str(i + 1) + "}:\n")
+            M = Matrix([])
+            M.matrix = copy.deepcopy(A.matrix)
+            for j in range(len(M.matrix)):
+                M.matrix[j][i] = copy.deepcopy(self.matrix[j][-1])
+            detI = M.det(True)
+            strTexRez += detI[0]
+            detI = detI[1]
+            solution.append(detI / det)
+            strTexRez += "\n$\n\n"
+            strTexRez += "$x_{" + str(i) + "} = \\frac{\\Delta_{" + str(i) + "}}{\\Delta} = " + \
+                         (detI / det).toStrTeX() + "$\n\n"
+        solution.reverse()
+        return solution, strTexRez
+
+
     # Решить матрцу как систему по методу Гаусса
-    def solveMatrixAsSystem(self, method="Gauss", BySteps=True):
+    def solveMatrixAsSystemGauss(self):
         leny, lenx = len(self.matrix), len(self.matrix[0])
         used = [False]*leny
         queue = []
@@ -329,7 +365,7 @@ class Matrix:
         for el in multipliersP:
             determ *= RationalNumber(el)
         strTexRez += ("=\\\\\\\\\\\\\n") + determ.toStrTeX()
-        return strTexRez
+        return strTexRez, determ
 
 
 
@@ -405,20 +441,20 @@ while True:
         continue
 
 
-    files[1].write("\\\\Solution:\\\\\\\\\n$\n")
+    files[1].write("\\\\Solution by Gauss method:\\\\\\\\\n$\n")
     files[1].write(matrix.matrixToTex())
     files[1].write("\\Rightarrow\\\\\\\\\\\\\n")
-    solution = matrix.solveMatrixAsSystem("Gauss", True)
+    solution = matrix.solveMatrixAsSystemGauss()
 
     if type(solution) == str:
         files[1].write("$\n")
-        files[1].write(str("\\\\\\\\\\\\\nAnswers: ", ))
+        files[1].write(str("\nAnswers: ", ))
         files[1].write(str(solution + "\n"))
     else:
         solution, stepsStr = solution[0], solution[1]
         files[1].write(stepsStr)
         files[1].write("$\n")
-        files[1].write(str("\\\\\\\\\\\\\nAnswers: ", ))
+        files[1].write(str("\nAnswers: ", ))
         solution.reverse()
         for i in range(len(solution)):
             files[1].write("$")
@@ -431,13 +467,33 @@ while True:
                 files[1].write(", \\quad")
             files[1].write("$\n")
 
-    matrix = matrixCopy
-    files[1].write(str("\n\nDeterminator:\n\n$"))
-    files[1].write(matrix.matrixToDetTex())
-    files[1].write("=\\\\\\\\\\\\\n")
-    files[1].write(matrix.det(True))
-    files[1   ].write("$\n")
-    files[1].write("\n\n")
+
+    files[1].write("\n\nSolution by Kramer method:\\\\\\\\\n")
+    try:
+        matrix = matrixCopy
+        solution = matrix.solveMatrixAsSystemKramer()
+
+        if type(solution) == str:
+            files[1].write(str("\nAnswers: ", ))
+            files[1].write(str(solution + "\n"))
+        else:
+            solution, stepsStr = solution[0], solution[1]
+            files[1].write(stepsStr)
+            files[1].write(str("\nAnswers: ", ))
+            solution.reverse()
+            for i in range(len(solution)):
+                files[1].write("$")
+                if solution[i].q == 1 or solution[i].p == 0:
+                    files[1].write(str("x" + str(i + 1) + " = " + str(solution[i].p)))
+                else:
+                    files[1].write(str("x" + str(i + 1) + " = \\frac{" + str(solution[i].p)
+                                       + "}{" + str(solution[i].q) + "}"))
+                if i != len(solution) - 1:
+                    files[1].write(", \\quad")
+                files[1].write("$\n")
+
+    except MatrixException:
+        files[1].write(str("\nNo solution by Kramer method\n\n"))
 
 # finish TeX generate
 texStr = "\\end{enumerate}\n" \
